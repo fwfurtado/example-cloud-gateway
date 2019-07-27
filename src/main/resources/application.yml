@@ -1,0 +1,37 @@
+server:
+  port: 9998
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: books
+          uri: http://localhost:9999/books
+          predicates:
+            - Path=/books/**
+          filters:
+            - RewriteResponseHeader=Authorization,.*,****
+        - id: cep
+          uri: https://viacep.com.br/
+          predicates:
+            - Path=/cep/{segment}
+          filters:
+            - SetPath=/ws/{segment}/json
+        - id: pokemon
+          uri: https://pokeapi.co/
+          predicates:
+            - Path=/pokemon/{name}
+          filters:
+            - SetPath=/api/v2/pokemon/{name}
+
+
+
+
+
+
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE
